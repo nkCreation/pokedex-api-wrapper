@@ -18,7 +18,13 @@ export default defineEventHandler(async (event) => {
     return PokemonMap.get(pokemonId);
   }
 
-  return await $fetch<Pokemon>(
+  const pokemon = await $fetch<Pokemon>(
     `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
   );
+
+  PokemonMap.set(pokemon.id, { ...pokemon, moves: [] });
+
+  await useStorage("pokemon").setItem("list", Array.from(PokemonMap.entries()));
+
+  return PokemonMap.get(pokemon.id);
 });
