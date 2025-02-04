@@ -1,6 +1,7 @@
 import { NamedAPIResourceList, Pokemon } from "pokenode-ts";
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  const query = getQuery(event);
   const PokemonMap = await getPokemonMap();
 
   if (!PokemonMap) {
@@ -8,7 +9,10 @@ export default defineEventHandler(async () => {
   }
 
   const pokemons = await $fetch<NamedAPIResourceList>(
-    "https://pokeapi.co/api/v2/pokemon?limit=151"
+    "https://pokeapi.co/api/v2/pokemon",
+    {
+      query,
+    }
   );
 
   if (pokemons.results) {
@@ -24,9 +28,9 @@ export default defineEventHandler(async () => {
       }, [] as Promise<Pokemon>[])
     );
 
-    console.log(pokemonsUrl.length);
-
-    pokemonsUrl.forEach((pokemon) => PokemonMap.set(pokemon.id, pokemon));
+    pokemonsUrl.forEach((pokemon) => {
+      PokemonMap.set(pokemon.id, { ...pokemon, moves: [] });
+    });
 
     await useStorage("pokemon").setItem(
       "list",
