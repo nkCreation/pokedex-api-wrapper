@@ -37,5 +37,9 @@ export default defineCachedEventHandler(async (event) => {
     })
   );
 
+  appendResponseHeaders(event, {
+    "Access-Control-Allow-Origin": "*",
+  });
+
   return pokemons.length === 1 ? pokemons[0] : pokemons;
 });

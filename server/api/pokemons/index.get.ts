@@ -41,6 +41,7 @@ export default defineCachedEventHandler(async (event) => {
       "x-total-count": pokemons.count,
       "x-previous-url": pokemons.previous || "",
       "x-next-url": pokemons.next || "",
+      "Access-Control-Allow-Origin": "*",
     });
 
     return pokemons.results.map((pokemon) => {
