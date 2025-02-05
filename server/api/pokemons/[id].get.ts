@@ -1,7 +1,7 @@
 import { Pokemon } from "pokenode-ts";
 import { getPokemonMap } from "./index.get";
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const idParams = getRouterParam(event, "id");
   if (!idParams) {
     return {};
