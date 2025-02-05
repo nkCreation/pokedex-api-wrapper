@@ -1,6 +1,6 @@
 import { NamedAPIResourceList, Pokemon } from "pokenode-ts";
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const query = getQuery(event);
   const PokemonMap = await getPokemonMap();
 
@@ -36,6 +36,12 @@ export default defineEventHandler(async (event) => {
       "list",
       Array.from(PokemonMap.entries())
     );
+
+    appendResponseHeaders(event, {
+      "x-total-count": pokemons.count,
+      "x-previous-url": pokemons.previous || "",
+      "x-next-url": pokemons.next || "",
+    });
 
     return pokemons.results.map((pokemon) => {
       const pokemonId = getPokemonIdFromUrl(pokemon.url);
